@@ -13,6 +13,7 @@ import com.termux.terminal.TerminalEmulator;
 import com.termux.terminal.TerminalSession;
 import com.termux.view.TerminalViewClient;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -36,6 +37,14 @@ public final class TermuxViewClient implements TerminalViewClient {
             return 1.0f;
         }
         return scale;
+    }
+
+    public void url(int x, int y) {
+        String text = mActivity.getCurrentTermSession().getEmulator().getScreen().getWordAtLocation(x, y);
+        LinkedHashSet<CharSequence> a = TermuxActivity.extractUrls(text);
+        if (a.size() > 0) {
+            mActivity.openUrl(a.iterator().next().toString());
+        }
     }
 
     @Override

@@ -106,6 +106,10 @@ public final class TerminalView extends View {
                     return true;
                 }
                 requestFocus();
+
+                int[] xAndY = getXAndYFromEvent(e);
+                mClient.url(xAndY[0], xAndY[1]);
+
                 if (!mEmulator.isMouseTrackingActive()) {
                     if (!e.isFromSource(InputDevice.SOURCE_MOUSE)) {
                         mClient.onSingleTapUp(e);
@@ -798,14 +802,9 @@ public final class TerminalView extends View {
                 mRightSelectionHandle = (BitmapDrawable) getContext().getDrawable(R.drawable.text_select_handle_right_material);
             }
 
-            int cx = (int) (ev.getX() / mRenderer.mFontWidth);
-            final boolean eventFromMouse = ev.isFromSource(InputDevice.SOURCE_MOUSE);
-            // Offset for finger:
-            final int SELECT_TEXT_OFFSET_Y = eventFromMouse ? 0 : -40;
-            int cy = (int) ((ev.getY() + SELECT_TEXT_OFFSET_Y) / mRenderer.mFontLineSpacing) + mTopRow;
-
-            mSelX1 = mSelX2 = cx;
-            mSelY1 = mSelY2 = cy;
+            int[] xAndY = getXAndYFromEvent(ev);
+            mSelX1 = mSelX2 = xAndY[0];
+            mSelY1 = mSelY2 = xAndY[1];
 
             TerminalBuffer screen = mEmulator.getScreen();
             if (!" ".equals(screen.getSelectedText(mSelX1, mSelY1, mSelX1, mSelY1))) {
@@ -923,6 +922,15 @@ public final class TerminalView extends View {
 
     private CharSequence getText() {
         return mEmulator.getScreen().getSelectedText(0, mTopRow, mEmulator.mColumns, mTopRow +mEmulator.mRows);
+    }
+
+    private int[] getXAndYFromEvent(MotionEvent ev) {
+        int cx = (int) (ev.getX() / mRenderer.mFontWidth);
+        final boolean eventFromMouse = ev.isFromSource(InputDevice.SOURCE_MOUSE);
+        // Offset for finger:
+        final int SELECT_TEXT_OFFSET_Y = eventFromMouse ? 0 : -40;
+        int cy = (int) ((ev.getY() + SELECT_TEXT_OFFSET_Y) / mRenderer.mFontLineSpacing) + mTopRow;
+        return new int[] { cx, cy };
     }
 
 }
