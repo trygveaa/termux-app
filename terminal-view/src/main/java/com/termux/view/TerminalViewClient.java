@@ -39,4 +39,5 @@ public interface TerminalViewClient {
 
     boolean onLongPress(MotionEvent event);
 
+    void url(int x, int y);
 }

@@ -778,18 +778,22 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
             lv.setOnItemLongClickListener((parent, view, position, id) -> {
                 dialog.dismiss();
                 String url = (String) urls[position];
-                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                try {
-                    startActivity(i, null);
-                } catch (ActivityNotFoundException e) {
-                    // If no applications match, Android displays a system message.
-                    startActivity(Intent.createChooser(i, null));
-                }
+                openUrl(url);
                 return true;
             });
         });
 
         dialog.show();
+    }
+
+    public void openUrl(String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        try {
+            startActivity(i,null);
+        } catch (ActivityNotFoundException e) {
+            // If no applications match, Android displays a system message.
+            startActivity(Intent.createChooser(i,null));
+        }
     }
 
     @Override
