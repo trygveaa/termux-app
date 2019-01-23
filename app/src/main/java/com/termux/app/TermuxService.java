@@ -208,7 +208,7 @@ public final class TermuxService extends Service implements SessionChangedCallba
 
         // If holding a wake or wifi lock consider the notification of high priority since it's using power,
         // otherwise use a low priority
-        builder.setPriority((wakeLockHeld) ? Notification.PRIORITY_HIGH : Notification.PRIORITY_LOW);
+        builder.setPriority(Notification.PRIORITY_MAX);
 
         // No need to show a timestamp:
         builder.setShowWhen(false);
@@ -354,7 +354,7 @@ public final class TermuxService extends Service implements SessionChangedCallba
 
         String channelName = "Termux";
         String channelDescription = "Notifications from Termux";
-        int importance = NotificationManager.IMPORTANCE_LOW;
+        int importance = NotificationManager.IMPORTANCE_MAX;
 
         NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName,importance);
         channel.setDescription(channelDescription);

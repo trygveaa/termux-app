@@ -65,6 +65,7 @@ final class TermuxPreferences {
     int mBellBehaviour = BELL_VIBRATE;
 
     boolean mBackIsEscape;
+    boolean mNoExitMessage;
     boolean mShowExtraKeys;
 
     String[][] mExtraKeys;
@@ -191,6 +192,7 @@ final class TermuxPreferences {
         }
 
         mBackIsEscape = "escape".equals(props.getProperty("back-key", "back"));
+        mNoExitMessage = "true".equals(props.getProperty("no-exit-message", "false"));
 
         shortcuts.clear();
         parseAction("shortcut.create-session", SHORTCUT_ACTION_CREATE_SESSION, props);

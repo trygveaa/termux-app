@@ -367,7 +367,7 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
                         showToast(toToastTitle(finishedSession) + " - exited", true);
                 }
 
-                if (mTermService.getSessions().size() > 1) {
+                if (mTermService.getSessions().size() > 1 || mSettings.mNoExitMessage) {
                     removeFinishedSession(finishedSession);
                 }
 
@@ -460,12 +460,14 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
             return true;
         });
 
+        Intent i = getIntent();
+        boolean failSafe = i.getBooleanExtra("failsafe", false);
         if (mTermService.getSessions().isEmpty()) {
             if (mIsVisible) {
                 TermuxInstaller.setupIfNeeded(TermuxActivity.this, () -> {
                     if (mTermService == null) return; // Activity might have been destroyed.
                     try {
-                        addNewSession(false, null);
+                        addNewSession(failSafe, null);
                     } catch (WindowManager.BadTokenException e) {
                         // Activity finished - ignore.
                     }
@@ -475,10 +477,9 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
                 finish();
             }
         } else {
-            Intent i = getIntent();
             if (i != null && Intent.ACTION_RUN.equals(i.getAction())) {
                 // Android 7.1 app shortcut from res/xml/shortcuts.xml.
-                addNewSession(false, null);
+                addNewSession(failSafe, null);
             } else {
                 switchToSession(getStoredCurrentSessionOrLast());
             }

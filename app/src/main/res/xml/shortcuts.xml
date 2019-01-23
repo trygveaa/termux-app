@@ -11,4 +11,19 @@
             android:targetPackage="com.termux"
             android:targetClass="com.termux.app.TermuxActivity"/>
     </shortcut>
+    <shortcut
+        android:shortcutId="failsafe_session"
+        android:enabled="true"
+        android:icon="@drawable/ic_new_session"
+        android:shortcutShortLabel="@string/failsafe_session"
+        tools:targetApi="n_mr1">
+        <intent
+            android:action="android.intent.action.RUN"
+            android:targetPackage="com.termux"
+            android:targetClass="com.termux.app.TermuxActivity">
+            <extra
+                android:name="failsafe"
+                android:value="true"/>
+        </intent>
+    </shortcut>
 </shortcuts>
