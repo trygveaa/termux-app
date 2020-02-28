@@ -361,11 +361,46 @@ public final class ExtraKeysView extends GridLayout {
                             return true;
 
                         case MotionEvent.ACTION_MOVE:
+                            if (event.getX() > 50) {
+                                longPressCount++;
+                            }
                             // These two keys have a Move-Up button appearing
-                            if (Arrays.asList("/", "-").contains(buttonText)) {
+                            if (Arrays.asList("/", "-", "ESC", "CTRL", "ALT", "TAB", "LEFT", "DOWN", "UP", "RIGHT").contains(buttonText)) {
                                 if (popupWindow == null && event.getY() < 0) {
                                     v.setBackgroundColor(BUTTON_COLOR);
-                                    String text = "-".equals(buttonText) ? "|" : "\\";
+                                    String text = "";
+                                    switch (buttonText) {
+                                        case "-":
+                                            text = "|";
+                                            break;
+                                        case "/":
+                                            text = "\\";
+                                            break;
+                                        case "ESC":
+                                            text = "tmux exit";
+                                            break;
+                                        case "CTRL":
+                                            text = "tmux " + classicArrowsDisplay.get("LEFT");
+                                            break;
+                                        case "ALT":
+                                            text = "tmux " + classicArrowsDisplay.get("RIGHT");
+                                            break;
+                                        case "TAB":
+                                            text = "weechat unread";
+                                            break;
+                                        case "LEFT":
+                                            text = lessKnownCharactersDisplay.get("HOME");
+                                            break;
+                                        case "DOWN":
+                                            text = lessKnownCharactersDisplay.get("PGDN");
+                                            break;
+                                        case "UP":
+                                            text = lessKnownCharactersDisplay.get("PGUP");
+                                            break;
+                                        case "RIGHT":
+                                            text = lessKnownCharactersDisplay.get("END");
+                                            break;
+                                    }
                                     popup(v, text);
                                 }
                                 if (popupWindow != null && event.getY() > 0) {
@@ -383,16 +418,37 @@ public final class ExtraKeysView extends GridLayout {
                                 scheduledExecutor.shutdownNow();
                                 scheduledExecutor = null;
                             }
-                            if (longPressCount == 0) {
-                                if (popupWindow != null && Arrays.asList("/", "-").contains(buttonText)) {
+//                            if (longPressCount == 0) {
+                                if (popupWindow != null && Arrays.asList("/", "-", "ESC", "CTRL", "ALT", "TAB", "LEFT", "DOWN", "UP", "RIGHT").contains(buttonText)) {
                                     popupWindow.setContentView(null);
                                     popupWindow.dismiss();
                                     popupWindow = null;
-                                    sendKey(root, "-".equals(buttonText) ? "|" : "\\");
+                                    if ("ESC".equals(buttonText)) {
+                                        sendKey(root, "\u0006d");
+                                    } else if ("CTRL".equals(buttonText)) {
+                                        sendKey(root, "\u0006");
+                                        sendKey(root, "BKSP");
+                                    } else if ("ALT".equals(buttonText)) {
+                                        sendKey(root, "\u0006");
+                                        sendKey(root, "TAB");
+                                    } else if ("TAB".equals(buttonText)) {
+                                        sendKey(root, "ESC");
+                                        sendKey(root, "a");
+                                    } else if ("LEFT".equals(buttonText)) {
+                                        sendKey(root, "HOME");
+                                    } else if ("DOWN".equals(buttonText)) {
+                                        sendKey(root, "PGDN");
+                                    } else if ("UP".equals(buttonText)) {
+                                        sendKey(root, "PGUP");
+                                    } else if ("RIGHT".equals(buttonText)) {
+                                        sendKey(root, "END");
+                                    } else {
+                                        sendKey(root, "-".equals(buttonText) ? "|" : "\\");
+                                    }
                                 } else {
                                     v.performClick();
                                 }
-                            }
+//                            }
                             return true;
 
                         default:
